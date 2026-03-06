@@ -1,0 +1,28 @@
+<div style="padding: 20px; font-family: sans-serif;">
+
+  @if (anime()) {
+    
+    <div style="display: flex; gap: 30px; align-items: flex-start; background: #f4f4f4; padding: 20px; border-radius: 12px;">
+      
+      <img [src]="anime()?.imageUrl" [alt]="anime()?.title" style="width: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+      
+      <div>
+        <h1 style="font-size: 2.5rem; margin-top: 0; color: #333;">{{ anime()?.title }}</h1>
+        <p style="font-size: 1.2rem;"><strong>Status:</strong> {{ anime()?.status }}</p>
+        <p style="font-size: 1.2rem;"><strong>Total Episodes:</strong> {{ anime()?.episodes }}</p>
+        
+        <button [routerLink]="['/dashboard']" 
+                style="margin-top: 30px; padding: 10px 20px; font-size: 1rem; cursor: pointer; background-color: #333; color: white; border: none; border-radius: 6px;">
+          ← Back to Vault
+        </button>
+      </div>
+
+    </div>
+
+  } @else {
+    
+    <h2 style="color: #666;">Loading anime databanks...</h2>
+    
+  }
+
+</div>

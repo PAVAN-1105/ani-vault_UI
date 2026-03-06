@@ -1,0 +1,24 @@
+<div style="border: 1px solid #ccc; padding: 10px; width: 200px; text-align: center; border-radius: 8px; background-color: #f9f9f9;">
+  
+  <img [src]="animeInfo.imageUrl" [alt]="animeInfo.title" style="width: 100%; height: 250px; object-fit: cover; border-radius: 4px;">
+  
+  <h3>{{ animeInfo.title | uppercase }}</h3>
+  <p>Episodes: {{ animeInfo.episodes }}</p>
+  
+  <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+    <button [routerLink]="['/detail', animeInfo.id]" 
+            style="padding: 8px 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px;">
+      View Details
+    </button>
+    
+    <button (click)="onFavoriteClick()" 
+            style="padding: 8px 16px; cursor: pointer; background-color: #ffc107; color: black; border: none; border-radius: 4px; font-weight: bold;">
+      ⭐
+    </button>
+    <button (click)="onDeleteClick()" 
+            style="padding: 8px 12px; cursor: pointer; background-color: #dc3545; color: white; border: none; border-radius: 4px; font-weight: bold;">
+      🗑️
+    </button>
+  </div>
+
+</div>
