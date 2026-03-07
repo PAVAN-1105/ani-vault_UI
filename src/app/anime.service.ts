@@ -8,7 +8,7 @@ import { Anime } from './anime';
   providedIn: 'root'
 })
 export class AnimeService {
-  private dataUrl =  'https://anime-tracker-api-2a57.onrender.com';
+  private dataUrl =  'http://localhost:3000/api/animes';
 
   constructor(private http: HttpClient) { }
 
