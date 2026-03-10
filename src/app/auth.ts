@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'https://ani-vault-backend.onrender.com/api';
 
   currentUserSignal = signal<boolean>(!!localStorage.getItem('token')); 
   
