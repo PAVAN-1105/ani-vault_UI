@@ -1,0 +1,32 @@
+<div style="max-width: 400px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+  
+  <h2>{{ isLoginMode ? 'Login to Anime Vault' : 'Create an Account' }}</h2>
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    
+    <div style="margin-bottom: 15px;">
+      <label>Username</label><br>
+      <input type="text" formControlName="username" style="width: 100%; padding: 8px;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label>Password</label><br>
+      <input type="password" formControlName="password" style="width: 100%; padding: 8px;">
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid" style="padding: 10px 20px; width: 100%; cursor: pointer;">
+      {{ isLoginMode ? 'Login' : 'Register' }}
+    </button>
+    
+  </form>
+
+  <div style="margin-top: 15px; text-align: center;">
+    <p>
+      {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}
+      <a href="javascript:void(0)" (click)="toggleMode()" style="color: blue; text-decoration: underline; cursor: pointer;">
+        {{ isLoginMode ? 'Register here' : 'Login here' }}
+      </a>
+    </p>
+  </div>
+
+</div>

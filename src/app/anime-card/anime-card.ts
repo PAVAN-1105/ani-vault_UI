@@ -1,4 +1,3 @@
-// 1. Import Output and EventEmitter
 import { Component, Input, Output, EventEmitter } from '@angular/core'; 
 import { RouterModule } from '@angular/router';
 import { Anime } from '../anime';
@@ -13,17 +12,13 @@ import { UpperCasePipe } from '@angular/common';
 export class AnimeCard {
   @Input() animeInfo!: Anime; 
 
-  // 2. Create the Megaphone (@Output)
-  // This says: "I am going to emit an event that contains an Anime object"
+  // --- UPDATED: Both emitters now send the full Anime object ---
   @Output() favoriteSelected = new EventEmitter<Anime>();
-  @Output() deleteSelected = new EventEmitter<number>();
+  @Output() deleteSelected = new EventEmitter<Anime>(); 
 
-  // 3. The function that clicks the megaphone's button
-  onFavoriteClick() {
-    // We emit the exact anime data that this card is holding!
-    this.favoriteSelected.emit(this.animeInfo);
-  }
   onDeleteClick() {
-    this.deleteSelected.emit(this.animeInfo.id);
+    // ✅ CHANGED: Now emits 'this.animeInfo' instead of 'this.animeInfo.id'
+    // This allows the Dashboard Modal to show "Are you sure you want to delete [Title]?"
+    this.deleteSelected.emit(this.animeInfo);
   }
 }

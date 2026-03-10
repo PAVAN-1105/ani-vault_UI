@@ -1,97 +1,115 @@
-// 1. Import computed from core, and FormsModule from forms
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { AnimeCard } from '../anime-card/anime-card';
 import { AnimeService } from '../anime.service';
+import { AuthService } from '../auth'; // Adjust path if necessary
 import { Anime } from '../anime';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  // 2. Add FormsModule to imports
   imports: [AnimeCard, FormsModule], 
   templateUrl: './dashboard.html'
 })
 export class Dashboard implements OnInit {
   private animeService = inject(AnimeService);
+  public authService = inject(AuthService);
   
-  // Our master list of animes from the database
   animes = signal<Anime[]>([]);
-
-  // 3. A signal to hold whatever the user types into the search box
   searchTerm = signal('');
-
-  // --- NEW: Signals to hold the new form data ---
   newTitle = signal('');
   newEpisodes = signal<number | null>(null);
+  
+  // --- NEW: Signal for Filtering by Status ---
+  filterStatus = signal<'All' | 'Watching' | 'Completed' | 'Plan to Watch'>('All');
 
-  // 4. A Computed Signal! 
-  // This automatically watches 'searchTerm' and 'animes'. 
-  // If either one changes, it instantly recalculates the filtered list.
+  // --- Signal for Watching Status (Adding New Anime) ---
+  newStatus = signal<'Watching' | 'Completed' | 'Plan to Watch'>('Watching');
+
+  // --- Track the anime targeted for deletion for the Custom Modal ---
+  animeToDelete = signal<Anime | null>(null);
+
+  // --- Statistics Calculations ---
+  totalAnimes = computed(() => this.animes().length);
+  totalEpisodes = computed(() => 
+    this.animes().reduce((sum, anime) => sum + (anime.episodes || 0), 0)
+  );
+
+  // --- UPDATED: Now filters by BOTH search term and status dropdown ---
   filteredAnimes = computed(() => {
     const term = this.searchTerm().toLowerCase();
-    return this.animes().filter(anime => 
-      anime.title.toLowerCase().includes(term)
-    );
+    const status = this.filterStatus();
+
+    return this.animes().filter(anime => {
+      // 1. Check if title matches search term
+      const matchesSearch = anime.title.toLowerCase().includes(term);
+      // 2. Check if status matches dropdown (or if 'All' is selected)
+      const matchesStatus = status === 'All' || anime.status === status;
+      
+      // 3. Keep anime only if it passes both checks
+      return matchesSearch && matchesStatus;
+    });
   });
 
   ngOnInit(): void {
     this.loadAnimes();
   }
 
-  // --- NEW: Helper function to fetch data so we can reuse it! ---
   loadAnimes() {
     this.animeService.getAnimes().subscribe({
       next: (data) => this.animes.set(data),
-      error: (err) => console.error("Error fetching data:", err)
+      error: () => this.authService.showToast("Failed to load vault", true)
     });
   }
 
-  // --- NEW: The function that runs when you click "Add Anime" ---
   createNewAnime() {
-    // Make sure the fields aren't empty
-    if (!this.newTitle() || !this.newEpisodes()) return;
+    if (!this.newTitle() || !this.newEpisodes()) {
+      this.authService.showToast("Missing title or episodes!", true);
+      return;
+    }
 
-    // Package the data into an Anime object
-    const newAnimeData: Anime = {
-      id: Date.now(), // Generate a random ID for the route
+    const newAnime: Anime = {
+      id: Date.now(),
       title: this.newTitle(),
       episodes: this.newEpisodes()!,
-      status: "Ongoing",
-      // Generates a placeholder image with the anime's title
+      status: this.newStatus(), // Uses the selected status
       imageUrl: `https://placehold.co/400x600/purple/white?text=${this.newTitle().replace(/ /g, '+')}`
     };
 
-    // Send it to the backend!
-    this.animeService.addAnime(newAnimeData).subscribe({
+    this.animeService.addAnime(newAnime).subscribe({
       next: (savedAnime) => {
-        console.log("Successfully saved to database:", savedAnime);
-        
-        // Clear the form boxes
+        this.authService.showToast(`🚀 ${savedAnime.title} added to ${savedAnime.status}!`);
         this.newTitle.set('');
         this.newEpisodes.set(null);
-        
-        // Refresh the list to show the new anime instantly!
+        this.newStatus.set('Watching'); // Reset to default
         this.loadAnimes();
       },
-      error: (err) => console.error("Error saving anime:", err)
+      error: () => this.authService.showToast("Error saving anime", true)
     });
   }
 
-  handleFavorite(selectedAnime: Anime) {
-    alert(`Added to Favorites: ${selectedAnime.title}!`);
+  // --- CUSTOM MODAL FLOW ---
+  handleDelete(anime: Anime) {
+    this.animeToDelete.set(anime);
   }
-  // NEW: Handle the delete event
-  handleDelete(id: number) {
-    // Add a quick confirmation so you don't accidentally click it
-    if (confirm("Are you sure you want to delete this anime?")) {
-      this.animeService.deleteAnime(id).subscribe({
+
+  closeModal() {
+    this.animeToDelete.set(null);
+  }
+
+  confirmDelete() {
+    const anime = this.animeToDelete();
+    if (anime) {
+      this.animeService.deleteAnime(anime.id).subscribe({
         next: () => {
-          console.log(`Anime ${id} deleted!`);
-          // Refresh the data instantly!
           this.loadAnimes(); 
+          this.authService.showToast(`${anime.title} removed from vault.`, false);
+          this.closeModal();
         },
-        error: (err) => console.error("Error deleting anime:", err)
+        error: () => {
+          this.authService.showToast("Delete failed!", true);
+          this.closeModal();
+        }
       });
     }
   }

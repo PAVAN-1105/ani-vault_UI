@@ -2,17 +2,37 @@
 
   @if (anime()) {
     
-    <div style="display: flex; gap: 30px; align-items: flex-start; background: #f4f4f4; padding: 20px; border-radius: 12px;">
+    <div style="display: flex; gap: 30px; align-items: flex-start; background: #f4f4f4; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
       
-      <img [src]="anime()?.imageUrl" [alt]="anime()?.title" style="width: 300px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+      <img [src]="anime()?.imageUrl" 
+           [alt]="anime()?.title" 
+           style="width: 300px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); object-fit: cover;">
       
       <div>
-        <h1 style="font-size: 2.5rem; margin-top: 0; color: #333;">{{ anime()?.title }}</h1>
-        <p style="font-size: 1.2rem;"><strong>Status:</strong> {{ anime()?.status }}</p>
-        <p style="font-size: 1.2rem;"><strong>Total Episodes:</strong> {{ anime()?.episodes }}</p>
+        <h1 style="font-size: 2.5rem; margin-top: 0; color: #1a1a1a;">{{ anime()?.title }}</h1>
+        
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+          <strong style="font-size: 1.2rem;">Status:</strong>
+          
+          <select 
+            [ngModel]="anime()?.status" 
+            (ngModelChange)="onStatusChange($event)"
+            [style.color]="anime()?.status === 'Completed' ? '#28a745' : (anime()?.status === 'Watching' ? '#007bff' : '#6c757d')"
+            style="padding: 8px 12px; border-radius: 6px; border: 2px solid #ddd; font-size: 1.1rem; font-weight: bold; cursor: pointer; outline: none; background: white;">
+            <option value="Watching" style="color: #007bff;">Watching</option>
+            <option value="Completed" style="color: #28a745;">Completed</option>
+            <option value="Plan to Watch" style="color: #6c757d;">Plan to Watch</option>
+          </select>
+        </div>
+
+        <p style="font-size: 1.2rem; margin-top: 0;">
+          <strong>Total Episodes:</strong> {{ anime()?.episodes }}
+        </p>
         
         <button [routerLink]="['/dashboard']" 
-                style="margin-top: 30px; padding: 10px 20px; font-size: 1rem; cursor: pointer; background-color: #333; color: white; border: none; border-radius: 6px;">
+                style="margin-top: 30px; padding: 12px 24px; font-size: 1rem; cursor: pointer; background-color: #333; color: white; border: none; border-radius: 6px; transition: background 0.2s;"
+                onmouseover="this.style.backgroundColor='#555'"
+                onmouseout="this.style.backgroundColor='#333'">
           ← Back to Vault
         </button>
       </div>
@@ -21,7 +41,9 @@
 
   } @else {
     
-    <h2 style="color: #666;">Loading anime databanks...</h2>
+    <div style="text-align: center; margin-top: 50px;">
+      <h2 style="color: #999; font-style: italic;">Loading anime databanks...</h2>
+    </div>
     
   }
 

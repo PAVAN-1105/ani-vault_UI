@@ -1,14 +1,27 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './dashboard/dashboard';
-import { AnimeDetail } from './anime-detail/anime-detail';
+import { authGuard } from './auth-guard';
+// ❌ REMOVE the static imports for Dashboard, AnimeDetail, and LoginComponent!
 
 export const routes: Routes = [
-    // When the app loads (empty path), automatically redirect to the dashboard
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   
-  // When the URL is /dashboard, show the DashboardComponent
-  { path: 'dashboard', component: Dashboard },
+  // ✅ NEW CONCEPT: Lazy Loading
+  // Angular will only download this file when the user actually navigates to /dashboard
+  { 
+    path: 'dashboard', 
+    loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard), 
+    canActivate:[authGuard]
+  },
   
-  // When the URL is /detail/1 (or any ID), show the AnimeDetailComponent
-  { path: 'detail/:id', component: AnimeDetail }
+  { 
+    path: 'detail/:id', 
+    loadComponent: () => import('./anime-detail/anime-detail').then(c => c.AnimeDetail), 
+    canActivate:[authGuard]
+
+  },
+  
+  { 
+    path: 'login', 
+    loadComponent: () => import('./login/login').then(c => c.LoginComponent) 
+  }
 ];

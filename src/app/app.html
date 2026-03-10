@@ -1,7 +1,52 @@
-<header style="background-color: #2c3e50; color: white; padding: 10px; text-align: center;">
-  <h1>My Anime Vault</h1>
-</header>
+<nav style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 15px; background-color: #f4f4f4; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  
+  <div></div>
 
-<main style="padding: 20px;">
-  <router-outlet></router-outlet>
-</main>
+  <div style="text-align: center;">
+    <h2 style="margin: 0; font-size: 1.8rem; color: #333; font-family: sans-serif;">Anime Vault</h2>
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; gap: 15px; align-items: center; padding-right: 10px;">
+    @if (authService.currentUserSignal()) {
+      <a routerLink="/dashboard" style="color: #007bff; text-decoration: none; font-weight: bold; cursor: pointer;">
+        Dashboard
+      </a>
+      <button (click)="authService.logout()" style="background: #dc3545; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; font-weight: bold; transition: background 0.3s;">
+        Logout
+      </button>
+    } @else {
+      <a routerLink="/login" style="color: #007bff; text-decoration: none; font-weight: bold; cursor: pointer;">
+        Login / Register
+      </a>
+    }
+  </div>
+
+</nav>
+
+@if (authService.toastMessage()) {
+  <div [style.background-color]="authService.isError() ? '#dc3545' : '#28a745'"
+       style="
+    position: fixed; 
+    top: 25px; 
+    right: 25px; 
+    color: white; 
+    padding: 12px 25px; 
+    border-radius: 8px; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+    z-index: 10000;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: slideIn 0.4s ease-out;
+  ">
+    {{ authService.toastMessage() }}
+  </div>
+}
+
+<router-outlet></router-outlet>
+
+<style>
+  @keyframes slideIn {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+</style>
