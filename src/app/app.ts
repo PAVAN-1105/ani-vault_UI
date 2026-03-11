@@ -1,10 +1,11 @@
-import { Component, signal, inject } from '@angular/core'; // Added inject here
+import { Component, signal, inject } from '@angular/core'; 
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { AuthService } from './auth'; // Ensure this matches your filename
+import { AuthService } from './auth'; 
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true, // Ensure standalone is true if you aren't using Modules
+  standalone: true, 
   imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -12,6 +13,9 @@ import { AuthService } from './auth'; // Ensure this matches your filename
 export class App {
   protected readonly title = signal('Anime Vault');
   
-  // Use 'public' so your HTML template can see authService.currentUserSignal()
+  // Use 'public' so your HTML template can see the signals
   public authService = inject(AuthService); 
+  
+  // ✅ Inject the LoadingService here
+  public loadingService = inject(LoadingService); 
 }
