@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Anime } from './anime';
+import { Anime } from '../../../core/models/anime'; // ✅ Updated path
 
 @Injectable({
   providedIn: 'root'

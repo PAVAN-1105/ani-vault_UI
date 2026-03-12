@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core'; // Added inject
+import { Component, inject } from '@angular/core'; 
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '../auth'; // Ensure path is correct
+import { AuthService } from '../../services/auth'; // ✅ Updated path
 import { Router } from '@angular/router';
 
 @Component({

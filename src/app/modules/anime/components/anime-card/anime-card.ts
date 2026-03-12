@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter,ChangeDetectionStrategy } from '@angular/core'; 
 import { RouterModule } from '@angular/router';
-import { Anime } from '../anime';
+import { Anime } from '../../../../core/models/anime'; // ✅ All the way up to core models
 import { UpperCasePipe } from '@angular/common';
 
 @Component({

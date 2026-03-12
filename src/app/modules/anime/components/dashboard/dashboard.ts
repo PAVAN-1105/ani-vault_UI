@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
-import { AnimeCard } from '../anime-card/anime-card';
-import { AnimeService } from '../anime.service';
-import { AuthService } from '../auth'; // Adjust path if necessary
-import { Anime } from '../anime';
+import { AnimeCard } from '../anime-card/anime-card'; // ✅ Sibling component
+import { AnimeService } from '../../services/anime.service'; // ✅ Up to anime services
+import { AuthService } from '../../../auth/services/auth'; // ✅ Across to auth module
+import { Anime } from '../../../../core/models/anime'; // ✅ All the way up to core models
 
 @Component({
   selector: 'app-dashboard',

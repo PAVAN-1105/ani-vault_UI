@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router'; 
 import { FormsModule } from '@angular/forms'; 
-import { AnimeService } from '../anime.service';
-import { AuthService } from '../auth';
-import { Anime } from '../anime';
+import { AnimeService } from '../../services/anime.service'; // ✅ Up to anime services
+import { AuthService } from '../../../auth/services/auth'; // ✅ Across to auth module
+import { Anime } from '../../../../core/models/anime'; // ✅ Up to core models
 // ✅ 1. Import switchMap from RxJS
 import { switchMap } from 'rxjs/operators'; 
 

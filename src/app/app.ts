@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core'; 
 import { RouterOutlet, RouterLink } from '@angular/router';
-import { AuthService } from './auth'; 
-import { LoadingService } from './loading.service';
+import { AuthService } from './modules/auth/services/auth'; // ✅ Down into the auth module
+import { LoadingService } from './core/services/loading.service'; // ✅ Down into the core module
 
 @Component({
   selector: 'app-root',
