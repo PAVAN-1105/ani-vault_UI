@@ -21,7 +21,7 @@ export class AnimeService {
 
   getAnimeById(id: number): Observable<Anime | undefined> {
     return this.http.get<Anime[]>(this.dataUrl).pipe(
-      map(animes => animes.find(anime => anime.id === Number(id))
+      map(animes => animes.find(anime => anime.id === Number(id)))
     );
   }
 
